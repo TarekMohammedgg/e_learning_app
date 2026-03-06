@@ -6,6 +6,8 @@ import 'package:e_learning_app/features/course_details/presentation/screens/widg
 import 'package:e_learning_app/features/home/presentation/screens/home_screen.dart';
 import 'package:e_learning_app/features/layout_nav_bottom_bar/presentation/screens/layout_bottom_nav_bar_screen.dart';
 import 'package:e_learning_app/features/my_courses/presentation/screens/my_courses_screen.dart';
+import 'package:e_learning_app/features/payment/data/model/payment_args.dart';
+import 'package:e_learning_app/features/payment/presentation/screens/payment_screen.dart';
 import 'package:e_learning_app/features/profile/presentation/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -37,6 +39,11 @@ class AppRouter {
         return MaterialPageRoute(builder: (context) => const MyCoursesScreen());
       case Routes.profile:
         return MaterialPageRoute(builder: (context) => const ProfileScreen());
+      case Routes.payment:
+        final args = settings.arguments as PaymentArgs;
+        return MaterialPageRoute(
+          builder: (context) => PaymentScreen(args: args),
+        );
       default:
         return MaterialPageRoute(
           builder: (context) =>

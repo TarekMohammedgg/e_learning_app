@@ -6,4 +6,5 @@ class Routes {
   static const String layoutBottomNavBar = "LayoutBottomNavBarScreen";
   static const String myCourses = "MyCoursesScreen";
   static const String profile = "ProfileScreen";
+  static const String payment = "PaymentScreen";
 }

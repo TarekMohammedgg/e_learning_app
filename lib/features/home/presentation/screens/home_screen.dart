@@ -38,7 +38,7 @@ class HomeScreen extends StatelessWidget {
                   Text(
                     AppStrings.goodMorning,
                     style: AppStyle.medium14.copyWith(
-                      color: const Color(0xff0F172A),
+                      color: AppColors.textDark,
                     ),
                   ),
                   const SizedBox(height: 5),
@@ -64,8 +64,11 @@ class HomeScreen extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    const SearchTextField(
+                    SearchTextField(
                       hintText: AppStrings.whatDoYouWantToLearn,
+                      onChanged: (query) {
+                        context.read<HomeCubit>().searchCourses(query);
+                      },
                     ),
                     const SizedBox(height: 10),
                     const Row(
@@ -79,7 +82,25 @@ class HomeScreen extends StatelessWidget {
                     const SizedBox(height: 10),
                     if (state is HomeLoadingState)
                       const Center(child: CircularProgressIndicator()),
-                    if (state is HomeSuccessState)
+                    if (state is HomeSuccessState && state.courses.isEmpty)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 40),
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.search_off,
+                              size: 48,
+                              color: AppColors.textMuted,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              AppStrings.noResults,
+                              style: AppStyle.regular16,
+                            ),
+                          ],
+                        ),
+                      ),
+                    if (state is HomeSuccessState && state.courses.isNotEmpty)
                       GridView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),

@@ -8,13 +8,27 @@ class ProfileCubit extends Cubit<ProfileStates> {
 
   Future<void> getUserData() async {
     emit(ProfileLoadingState());
-    final result = await profileRepo.getUserData();
-    result.fold(
+
+    final userResult = await profileRepo.getUserData();
+    final coursesResult = await profileRepo.getEnrolledCourses();
+
+    userResult.fold(
       (error) {
         if (!isClosed) emit(ProfileErrorState(message: error));
       },
       (userData) {
-        if (!isClosed) emit(ProfileSuccessState(userData: userData));
+        final courses = coursesResult.fold(
+          (error) => <dynamic>[],
+          (courses) => courses,
+        );
+        if (!isClosed) {
+          emit(
+            ProfileSuccessState(
+              userData: userData,
+              enrolledCourses: List.from(courses),
+            ),
+          );
+        }
       },
     );
   }

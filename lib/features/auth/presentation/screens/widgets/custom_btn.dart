@@ -22,9 +22,7 @@ class CustomBtn extends StatelessWidget {
       onPressed: onPressed,
 
       style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         backgroundColor: backgroundColor,
         foregroundColor: forgroundColor,
       ),
@@ -35,8 +33,8 @@ class CustomBtn extends StatelessWidget {
               ? Row(
                   children: [
                     if (image != null && image!.isNotEmpty)
-                      Image.asset(image!,),
-                    SizedBox(width: 2),
+                      Image.asset(image!, height: 30, width: 30),
+                    SizedBox(width: 5),
                   ],
                 )
               : SizedBox.shrink(),

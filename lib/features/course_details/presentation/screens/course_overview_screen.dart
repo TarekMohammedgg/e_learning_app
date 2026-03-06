@@ -1,8 +1,11 @@
 import 'package:e_learning_app/core/constants/app_colors.dart';
+import 'package:e_learning_app/core/constants/app_strings.dart';
 import 'package:e_learning_app/core/constants/app_style.dart';
+import 'package:e_learning_app/core/routing/routes.dart';
 import 'package:e_learning_app/features/course_details/data/repo/course_details_repo.dart';
 import 'package:e_learning_app/features/course_details/presentation/cubit/course_details_cubit.dart';
 import 'package:e_learning_app/features/course_details/presentation/cubit/course_details_states.dart';
+import 'package:e_learning_app/features/payment/data/model/payment_args.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,15 +27,16 @@ class CourseOverviewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BlocProvider(
-        create: (context) => CourseDetailsCubit(CourseDetailsRepo())
-          ..checkEnrollment(courseId: courseId),
+        create: (context) =>
+            CourseDetailsCubit(CourseDetailsRepo())
+              ..checkEnrollment(courseId: courseId),
         child: BlocConsumer<CourseDetailsCubit, CourseDetailsStates>(
           listener: (context, state) {
             if (state is CourseDetailsSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Enrolled successfully!'),
-                  backgroundColor: Colors.green,
+                  content: Text(AppStrings.enrolledSuccessfully),
+                  backgroundColor: AppColors.successColor,
                   behavior: SnackBarBehavior.floating,
                 ),
               );
@@ -40,7 +44,7 @@ class CourseOverviewScreen extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(state.error),
-                  backgroundColor: Colors.red,
+                  backgroundColor: AppColors.errorColor,
                   behavior: SnackBarBehavior.floating,
                 ),
               );
@@ -51,46 +55,60 @@ class CourseOverviewScreen extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 child: ElevatedButton(
-                        onPressed: state is AlreadyEnrolled ||
-                                state is CourseDetailsSuccess ||
-                                state is CourseDetailsLoading
-                            ? null
-                            : () {
-                                context
-                                    .read<CourseDetailsCubit>()
-                                    .enrollInCourse(courseId: courseId);
-                              },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
+                  onPressed:
+                      state is AlreadyEnrolled ||
+                          state is CourseDetailsSuccess ||
+                          state is CourseDetailsLoading
+                      ? null
+                      : () {
+                          // Navigate to payment screen
+                          Navigator.pushNamed(
+                            context,
+                            Routes.payment,
+                            arguments: PaymentArgs(
+                              courseTitle: title,
+                              coursePrice: price,
+                              courseId: courseId,
+                              courseImage: image,
+                            ),
+                          );
+                        },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        state is AlreadyEnrolled ||
+                            state is CourseDetailsSuccess
+                        ? AppColors.disabledColor
+                        : AppColors.primaryColor,
+                    foregroundColor: AppColors.btnForground,
+                    minimumSize: const Size(double.infinity, 52),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: state is CourseDetailsLoading
+                      ? SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: CircularProgressIndicator(
+                            color: AppColors.btnForground,
+                            strokeWidth: 2.5,
+                          ),
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
                               state is AlreadyEnrolled ||
                                       state is CourseDetailsSuccess
-                                  ? Colors.grey
-                                  : AppColors.primaryColor,
-                          foregroundColor: AppColors.btnForground,
-                          minimumSize: const Size(double.infinity, 52),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
+                                  ? AppStrings.alreadyEnrolled
+                                  : '${price.toString()} ${AppStrings.currency} - ${AppStrings.enrollNow}',
+                              style: AppStyle.bold16.copyWith(
+                                color: AppColors.btnForground,
+                              ),
+                            ),
+                          ],
                         ),
-                        child: state is CourseDetailsLoading
-                            ? SizedBox(
-                                height: 24,
-                                width: 24,
-                                child: CircularProgressIndicator(
-                                  color: AppColors.btnForground,
-                                  strokeWidth: 2.5,
-                                ),
-                              )
-                            : Text(
-                                state is AlreadyEnrolled ||
-                                        state is CourseDetailsSuccess
-                                    ? "Already Enrolled"
-                                    : "Enroll Course",
-                                style: AppStyle.bold16.copyWith(
-                                  color: AppColors.btnForground,
-                                ),
-                        ),
-                      ),
+                ),
               ),
             );
           },
@@ -104,7 +122,6 @@ class CourseOverviewScreen extends StatelessWidget {
           children: [
             Container(
               clipBehavior: Clip.antiAlias,
-
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -117,16 +134,19 @@ class CourseOverviewScreen extends StatelessWidget {
             ),
             SizedBox(height: 10),
             Text(
-              "${price.toString()} EGP",
-              style: AppStyle.medium14.copyWith(color: Colors.black),
+              "${price.toString()} ${AppStrings.currency}",
+              style: AppStyle.medium14.copyWith(color: AppColors.textDark),
             ),
             SizedBox(height: 10),
             Text(
-              "Description",
+              AppStrings.description,
               style: AppStyle.bold18.copyWith(color: AppColors.primaryColor),
             ),
             SizedBox(height: 10),
-            Text(desc, style: AppStyle.medium14.copyWith(color: Colors.black)),
+            Text(
+              desc,
+              style: AppStyle.medium14.copyWith(color: AppColors.textDark),
+            ),
           ],
         ),
       ),

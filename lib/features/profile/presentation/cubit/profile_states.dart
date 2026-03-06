@@ -1,3 +1,4 @@
+import 'package:e_learning_app/features/home/data/models/course_model.dart';
 import 'package:e_learning_app/features/profile/data/model/user_model.dart';
 
 abstract class ProfileStates {}
@@ -9,7 +10,8 @@ class ProfileLoadingState extends ProfileStates {}
 
 class ProfileSuccessState extends ProfileStates {
   final userModel userData;
-  ProfileSuccessState({required this.userData});
+  final List<CourseModel> enrolledCourses;
+  ProfileSuccessState({required this.userData, required this.enrolledCourses});
 }
 
 class ProfileErrorState extends ProfileStates {
