@@ -1,6 +1,7 @@
 import 'package:e_learning_app/core/constants/app_colors.dart';
 import 'package:e_learning_app/core/constants/app_style.dart';
 import 'package:e_learning_app/core/routing/routes.dart';
+import 'package:e_learning_app/features/profile/data/model/user_model.dart';
 import 'package:e_learning_app/features/profile/data/repo/profile_repo.dart';
 import 'package:e_learning_app/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:e_learning_app/features/profile/presentation/cubit/profile_states.dart';
@@ -64,11 +65,11 @@ class _ProfileScreenBody extends StatelessWidget {
 
   Widget _buildProfileContent(
     BuildContext context,
-    Map<String, dynamic> userData,
+    userModel userData,
   ) {
-    final name = userData['name']?.toString() ?? '';
-    final email = userData['email']?.toString() ?? '';
-    final role = userData['role']?.toString() ?? 'student';
+    final name = userData.name;
+    final email = userData.email;
+    final role = userData.role;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),

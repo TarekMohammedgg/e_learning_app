@@ -1,3 +1,5 @@
+import 'package:e_learning_app/features/profile/data/model/user_model.dart';
+
 abstract class ProfileStates {}
 
 class ProfileInitial extends ProfileStates {}
@@ -6,7 +8,7 @@ class ProfileInitial extends ProfileStates {}
 class ProfileLoadingState extends ProfileStates {}
 
 class ProfileSuccessState extends ProfileStates {
-  final Map<String, dynamic> userData;
+  final userModel userData;
   ProfileSuccessState({required this.userData});
 }
 
